@@ -1,5 +1,4 @@
 <?php
-
-	echo("silence is golden");
+# Silence is golden.
 
 ?>
