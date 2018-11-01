@@ -7,6 +7,8 @@
 * Author: Earthling Interactive
 * Author URI: https://earthlinginteractive.com
 * License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+* Text Domain: madisonphp-gutenberg
+* Domain Path: /languages
 */
 
 ?>
