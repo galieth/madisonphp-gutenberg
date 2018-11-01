@@ -3,7 +3,7 @@
 * Plugin Name: Madisonphp - Gutenberg 
 * Plugin URI: https://earthilnginteractive.com/madisonphp
 * Description: A plugin that adjusts how gutenberg acts on our site.
-* Version: 1.1
+* Version: 1.2
 * Author: Earthling Interactive
 * Author URI: https://earthlinginteractive.com
 * License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -30,5 +30,6 @@ function madison_gutenberg_color_palette() {
 }
 add_action( 'after_setup_theme', 'madison_gutenberg_color_palette' );
 
+wp_enqueue_style( 'madisonphp-gutenberg', plugins_url( '/css/madisonphp-gutenberg.css', __FILE__ ),array(), '1.2');
 
 ?>
