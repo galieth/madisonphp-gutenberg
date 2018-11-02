@@ -18,15 +18,50 @@ function madison_gutenberg_disable_custom_colors() {
 add_action( 'after_setup_theme', 'madison_gutenberg_disable_custom_colors' );
 
 function madison_gutenberg_color_palette() {
-	add_theme_support(
-		'editor-color-palette', array(
-			array(
-				'name'  => esc_html__( 'Black'),
-				'slug' => 'black',
-				'color' => '#2a2a2a',
-			)
-		)
-	);
+    $colors = get_option('madisonphp_gutenberg_options');
+    $palette_colors = array();
+    foreach($colors as $key => $color)
+    {
+    	if(!empty($color))
+    	{
+    		switch($key)
+    		{
+    			case 'madisonphp_gutenberg_field_primary_color':
+    				$color_name = "Primary Color";
+    				$color_slug = "primary-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_secondary_color':
+    				$color_name = "Secondary Color";
+    				$color_slug = "secondary-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_accent_1_color':
+    				$color_name = "Accent 1 Color";
+    				$color_slug = "accent-1-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_accent_2_color':
+    				$color_name = "Accent 2 Color";
+    				$color_slug = "accent-2-color";
+    				break;
+				default:
+    				$color_name = "";
+    				$color_slug = "";
+    				break;
+    		}
+    		if(!empty($color_name))
+    		{
+    			$palette_colors[] = array(
+					'name'  => esc_html__( $color_name, 'madisonphp-gutenberg'),
+					'slug' => $color_slug,
+					'color' => $color,
+				);
+    		}
+		}
+	}
+	if(!empty($palette_colors))
+	{
+		add_theme_support( 'editor-color-palette', $palette_colors );
+	}
+
 }
 add_action( 'after_setup_theme', 'madison_gutenberg_color_palette' );
 
