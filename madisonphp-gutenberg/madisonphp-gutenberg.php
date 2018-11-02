@@ -30,8 +30,6 @@ function madison_gutenberg_color_palette() {
 }
 add_action( 'after_setup_theme', 'madison_gutenberg_color_palette' );
 
-wp_enqueue_style( 'madisonphp-gutenberg', plugins_url( '/css/madisonphp-gutenberg.css', __FILE__ ),array(), '1.2');
-
 /* 
  * Options pages and related functions
  */
@@ -181,5 +179,40 @@ function madison_gutenberg_validate_color($color,$key)
 		}
 	}
 }
+
+function madisonphp_gutenberg_add_custom_colors()
+{
+	wp_enqueue_style( 'madisonphp-gutenberg', plugins_url( '/css/madisonphp-gutenberg.css', __FILE__ ),array(), '1.2');
+    $colors = get_option('madisonphp_gutenberg_options');
+    ob_start();
+    foreach($colors as $key => $color)
+    {
+    	if(!empty($color))
+    	{
+    		switch($key)
+    		{
+    			case 'madisonphp_gutenberg_field_primary_color':
+    				$color_name = "primary-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_secondary_color':
+    				$color_name = "secondary-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_accent_1_color':
+    				$color_name = "accent-1-color";
+    				break;
+    			case 'madisonphp_gutenberg_field_accent_2_color':
+    				$color_name = "accent-2-color";
+    				break;
+
+    		}
+			echo '.has-' . $color_name . '-color { color: '. $color . '; }';
+			echo '.has-' . $color_name . '-background-color { background-color: '. $color . '; }';
+    	}
+    }
+    $custom_css = ob_get_contents();
+    ob_end_clean();
+    wp_add_inline_style( 'madisonphp-gutenberg', $custom_css );	
+}
+add_action( 'wp_enqueue_scripts', 'madisonphp_gutenberg_add_custom_colors' );
 
 ?>
