@@ -72,7 +72,7 @@ function madisonphp_gutenberg_options_page_html()
 //Setup a configuration page
 function madisonphp_gutenberg_settings_init() {
  // register a new setting for "madisonphp_gutenberg" page
- register_setting( 'madisonphp_gutenberg', 'madisonphp_gutenberg_options');
+ register_setting( 'madisonphp_gutenberg', 'madisonphp_gutenberg_options', array('sanitize_callback' => 'madison_gutenberg_validate_color_options') );
  
  
  // register a new section in the "madisonphp_gutenberg" page for Colors
@@ -154,6 +154,32 @@ function madisonphp_gutenberg_field_color_cb( $args ) {
     <input type="text" name="madisonphp_gutenberg_options[<?php echo $labelFor; ?>]" value="<?php echo isset( $settings[$labelFor] ) ? $settings[$labelFor] : ''; ?>">
     <?php
 	return;
+}
+
+function madison_gutenberg_validate_color_options($args)
+{
+	foreach($args as $key => $color)
+	{
+		$args[$key] = madison_gutenberg_validate_color($color,$key);
+	}
+	return $args;
+}
+
+function madison_gutenberg_validate_color($color,$key)
+{
+	if(!empty($color))
+	{
+		if(preg_match('/^#(?:[0-9a-fA-F]{3}){1,2}$/',$color))
+		{
+			return $color;
+		}else
+		{
+			//No match found, or error occured. Return empty string and place an error message
+			$message = __('Color must be a valid hex color value','madisonphp-gutenberg');
+			add_settings_error( 'validator_' . $key, esc_attr( 'settings_updated' ), $message );
+			return '';
+		}
+	}
 }
 
 ?>
