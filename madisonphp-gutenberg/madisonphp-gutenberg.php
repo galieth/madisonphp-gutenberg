@@ -78,6 +78,15 @@ function madisonphp_gutenberg_options_page()
         'madisonphp-gutenberg',
         'madisonphp_gutenberg_options_page_html'
     );
+    add_submenu_page(
+        'options-general.php',
+        'Madisonphp Gutenberg Widgets',
+        'Madisonphp Widgets',
+        'manage_options',
+        'madisonphp-gutenberg-widgets',
+        'madisonphp_gutenberg_options_widgets_page_html'
+    );
+
 }
 add_action('admin_menu', 'madisonphp_gutenberg_options_page');
 
@@ -169,8 +178,32 @@ function madisonphp_gutenberg_settings_init() {
 	 ]
  );
 
+ register_setting( 'madisonphp_gutenberg_widgets', 'madisonphp_gutenberg_widgets_options', array('sanitize_callback' => 'madisonphp_gutenberg_validate_widgets_options'));
+
+ add_settings_section(
+ 'madisonphp_gutenberg_section_widgets',
+ __( 'Usable Widgets', 'madisonphp_gutenberg' ),
+ 'madisonphp_gutenberg_section_widgets_cb',
+ 'madisonphp_gutenberg_widgets'
+ ); 
+ 
+ add_settings_field(
+	 'madisonphp_gutenberg_field_widgets', 
+	 __( 'Pick Widgets', 'madisonphp_gutenberg' ),
+	 'madisonphp_gutenberg_field_widgets_cb',
+	 'madisonphp_gutenberg_widgets',
+	 'madisonphp_gutenberg_section_widgets',
+	 [
+		 'label_for' => 'madisonphp_gutenberg_field_widgets',
+		 'class' => 'madisonphp_gutenberg_row',
+	 ]
+ );
+
+ 
 }
 add_action( 'admin_init', 'madisonphp_gutenberg_settings_init' );
+
+
 
 //Call back function for the settings section:
 function madisonphp_gutenberg_section_color_cb( $args ) {
@@ -249,5 +282,49 @@ function madisonphp_gutenberg_add_custom_colors()
     wp_add_inline_style( 'madisonphp-gutenberg', $custom_css );	
 }
 add_action( 'wp_enqueue_scripts', 'madisonphp_gutenberg_add_custom_colors' );
+
+
+
+function madisonphp_gutenberg_options_widgets_page_html()
+{
+    // check user capabilities
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    ?>
+    <div class="wrap">
+        <h1><?= esc_html(get_admin_page_title()); ?></h1>
+        <form action="options.php" method="post">
+            <?php
+            settings_fields('madisonphp_gutenberg_widgets');
+            do_settings_sections('madisonphp_gutenberg_widgets');
+            submit_button('Save Settings');
+            ?>
+        </form>
+    </div>
+    <?php
+}
+
+
+//Call back function for the settings section:
+function madisonphp_gutenberg_section_widgets_cb( $args ) {
+	//Not outputting anything at this time
+	echo "<div>Select which elements you would like to include in the gutenberg editor</div>";
+	return;
+}
+function madisonphp_gutenberg_field_widgets_cb( $args ) {
+    $settings = get_option('madisonphp_gutenberg_widgets_options'); ?>
+	<label><input type="checkbox" name="madisonphp_gutenberg_widgets_options[core/paragraph]" value="1"<?php checked( 1 == $settings['core/paragraph'] ); ?> />core/paragraph</label>
+	<label><input type="checkbox" name="madisonphp_gutenberg_widgets_options[core/image]" value="1"<?php checked( 1 == $settings['core/image'] ); ?> />core/image</label>
+	<label><input type="checkbox" name="madisonphp_gutenberg_widgets_options[core/gallery]" value="1"<?php checked( 1 == $settings['core/gallery'] ); ?> />core/gallery</label>
+	<label><input type="checkbox" name="madisonphp_gutenberg_widgets_options[core/table]" value="1"<?php checked( 1 == $settings['core/table'] ); ?> />core/table</label>
+    <?php
+	return;
+}
+
+function madisonphp_gutenberg_validate_widgets_options($args) {
+   return $args;
+}
+
 
 ?>
