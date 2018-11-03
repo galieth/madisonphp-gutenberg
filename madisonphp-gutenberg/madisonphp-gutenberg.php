@@ -10,7 +10,8 @@
 * Text Domain: madisonphp-gutenberg
 * Domain Path: /languages
 */
-
+//no direct running of this php file
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function madison_gutenberg_disable_custom_colors() {
 	add_theme_support( 'disable-custom-colors' );
@@ -205,7 +206,7 @@ add_action( 'admin_init', 'madisonphp_gutenberg_settings_init' );
 
 
 
-//Call back function for the settings section:
+//Call back function for the Colors settings section:
 function madisonphp_gutenberg_section_color_cb( $args ) {
 	//Not outputting anything at this time
 	return;
@@ -284,7 +285,7 @@ function madisonphp_gutenberg_add_custom_colors()
 add_action( 'wp_enqueue_scripts', 'madisonphp_gutenberg_add_custom_colors' );
 
 
-
+// Widgets options page
 function madisonphp_gutenberg_options_widgets_page_html()
 {
     // check user capabilities
@@ -306,7 +307,7 @@ function madisonphp_gutenberg_options_widgets_page_html()
 }
 
 
-//Call back function for the settings section:
+//Call back function for the widgets settings section:
 function madisonphp_gutenberg_section_widgets_cb( $args ) {
 	//Not outputting anything at this time
 	echo "<div>Select which elements you would like to include in the gutenberg editor</div>";
@@ -325,6 +326,9 @@ function madisonphp_gutenberg_field_widgets_cb( $args ) {
 function madisonphp_gutenberg_validate_widgets_options($args) {
    return $args;
 }
+
+//Add the News CPT
+require_once plugin_dir_path(__FILE__) .'news.php';
 
 
 ?>
